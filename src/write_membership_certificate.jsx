@@ -79,6 +79,8 @@ const PdfFormMembership = () => {
       companyNameMM.enableReadOnly();
       companyNameEN.enableReadOnly();
 
+      form.flatten();
+
       const generatedPdfBytes = await pdfDoc.save();
 
       setPdfBytes(generatedPdfBytes);
