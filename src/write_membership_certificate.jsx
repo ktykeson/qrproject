@@ -20,6 +20,15 @@ const PdfFormMembership = () => {
     validity_to_from: 'Your Validity'
   });
 
+  const swapCharacters = (str, arr) => {
+    let chars = str.split('');
+    for (let i = 1; i < chars.length; i++) {
+      if (arr.includes(chars[i])) {
+        [chars[i - 1], chars[i]] = [chars[i], chars[i - 1]];
+      }
+    }
+    return chars.join('');
+  };  
 
   const fillForm = async () => {
     try {
@@ -59,7 +68,8 @@ const PdfFormMembership = () => {
       const qrImageField = form.getTextField('QR Field');    
 
       // Fill the form fields
-      companyNameMM.setText(formData.company_name_mm);
+      const checkArray = ['ေ', 'ြ'];
+      companyNameMM.setText(swapCharacters(formData.company_name_mm, checkArray));
       companyNameEN.setText(formData.company_name_en);
       addressMM.setText(formData.address_mm);
       addressEN.setText(formData.address_en);
