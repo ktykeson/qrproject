@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 
 const PdfFormFiller = () => {
   const [pdfBytes, setPdfBytes] = useState(null);
@@ -45,7 +46,15 @@ Organizations:
       const emblemImageBytes = await fetch(emblemUrl).then(res => res.arrayBuffer())
       
 
+      const burmeseFontUrl = './NotoSansMyanmar-Regular.ttf';
+      const burmeseFontBytes = await fetch(burmeseFontUrl).then(res => res.arrayBuffer());
+
       const pdfDoc = await PDFDocument.load(formPdfBytes);
+
+      pdfDoc.registerFontkit(fontkit);
+
+      const burmeseFont = await pdfDoc.embedFont(burmeseFontBytes);
+
       const form = pdfDoc.getForm();
 
       const marioImage = await pdfDoc.embedPng(marioImageBytes)
@@ -83,6 +92,8 @@ Organizations:
       backstoryField.setText(formData.backstory);
       traitsField.setText(formData.featTraits);
       treasureField.setText(formData.treasure);
+
+      nameField.updateAppearances(burmeseFont);
 
       nameField.enableReadOnly();
       ageField.enableReadOnly();
