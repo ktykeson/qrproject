@@ -32,11 +32,14 @@ const PdfFormMembership = () => {
 
   const fillForm = async () => {
     try {
-      const formUrl = './certificate_of_membership_template-4-2.pdf';
+      const formUrl = './certificate_of_membership_template-4-2-2.pdf';
       const formPdfBytes = await fetch(formUrl).then((res) => res.arrayBuffer());
 
       const qrURL = './facebookQR.png'
       const qrImageBytes = await fetch(qrURL).then(res => res.arrayBuffer())
+
+      const profileURL = './profile.png'
+      const profileImageBytes = await fetch(profileURL).then(res => res.arrayBuffer())
 
       const burmeseFontUrl = './NotoSansMyanmar-Regular.ttf';
       const burmeseFontBytes = await fetch(burmeseFontUrl).then(res => res.arrayBuffer());
@@ -50,6 +53,7 @@ const PdfFormMembership = () => {
       const form = pdfDoc.getForm();
       
       const qrImage = await pdfDoc.embedPng(qrImageBytes)
+      const profileImage = await pdfDoc.embedPng(profileImageBytes)
 
       // Your form fields
       const companyNameMM = form.getTextField('Company Name MM');
@@ -66,6 +70,7 @@ const PdfFormMembership = () => {
       const idNo = form.getTextField('ID Number');
       const validity = form.getTextField('Validity');
       const qrImageField = form.getTextField('QR Field');    
+      const profileImageField = form.getTextField('Profile Image');
 
       // Fill the form fields
       const checkArray = ['ေ', 'ြ'];
@@ -83,6 +88,7 @@ const PdfFormMembership = () => {
       idNo.setText(formData.id_no);
       validity.setText(formData.validity_to_from);
       qrImageField.setImage(qrImage)
+      profileImageField.setImage(profileImage)
 
       companyNameMM.updateAppearances(burmeseFont);
 
