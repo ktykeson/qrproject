@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Don't forget to import axios if you haven't already
+import axios from 'axios';
 import '../styles/registration/MemberRegistrationForm.css';
 
 const MemberRegistrationForm = () => {
@@ -20,13 +20,36 @@ const MemberRegistrationForm = () => {
     image: null,
   });
 
+  const [imageUploaded, setImageUploaded] = useState(false); // State to track whether an image is uploaded
+  const [fileName, setFileName] = useState('');
+
   const handleChange = (event) => {
     const { name, value, files } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: files ? files[0] : value,
     }));
+
+    // Update the label text when a file is uploaded
+    if (name === 'image' && files && files.length > 0) {
+      setImageUploaded(true); // Set imageUploaded state to true when an image is uploaded
+      const fileName = files[0].name;
+      const uploadLabel = document.querySelector('.file-upload-button');
+      if (uploadLabel) {
+        uploadLabel.textContent = `Uploaded: ${fileName}`;
+      }
+      setFileName(fileName); // Store the file name in state
+    }
   };
+
+  const handleDeleteImage = () => {
+    setFormData({ ...formData, image: null }); // Clear the image from the form data
+    setImageUploaded(false); // Reset imageUploaded state to false
+    const uploadInput = document.getElementById('image');
+    if (uploadInput) {
+      uploadInput.value = null; // Reset the file input value
+    }
+  };  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -223,17 +246,26 @@ const MemberRegistrationForm = () => {
         </div>
         </div>
         <div className="member-registration-form-group">
-        <label htmlFor="image">ကိုယ်စားလှယ်၏ ဓာတ်ပုံ:</label>
-        <label className="file-upload-button">
+          <label htmlFor="image">ကိုယ်စားလှယ်၏ ဓာတ်ပုံ:</label>
+          {imageUploaded ? (
+            <div>
+            <button type="button" onClick={handleDeleteImage}>
+            Delete Image
+            </button>
+            {fileName && <p>{fileName}</p>} {/* Render the file name if available */}
+            </div>
+            ) : (
+            <label className="file-upload-button">
             Upload
             <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
             />
-        </label>
+            </label>
+        )}
         </div>
 
         </div>
