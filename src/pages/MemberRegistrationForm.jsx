@@ -53,27 +53,47 @@ const MemberRegistrationForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
-    }
-
+  
+    // Create a JavaScript object containing all form data
+    const formDataToSend = {
+      memberType: formData.memberType,
+      state: formData.state,
+      nameMM: formData.nameMM,
+      nameEN: formData.nameEN,
+      addressMM: formData.addressMM,
+      addressEN: formData.addressEN,
+      phone: formData.phone,
+      email: formData.email,
+      regNo: formData.regNo,
+      regDate: formData.regDate,
+      repName: formData.repName,
+      repID: formData.repID,
+      repRole: formData.repRole,
+      // Do not include the 'image' field in the JSON as it's handled separately
+    };
+  
     try {
+      
+      const formDataJson = JSON.stringify(formDataToSend);
+  
+     
       const response = await axios.post(
         'https://your-api-endpoint.com/data',
-        formDataToSend,
+        formDataJson,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json', 
           },
         }
       );
+  
       console.log('Response:', response.data);
-      // Reset form fields after successful submission if needed
+      
     } catch (error) {
       console.error('There was an error!', error);
     }
   };
+  
 
   return (
     <div className="member-registration-form">
